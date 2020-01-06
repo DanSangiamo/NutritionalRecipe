@@ -18,7 +18,7 @@ public class UserInteraction {
     private double realCalories;
 
     /**
-     * This method asks the user for the ingredientes in the recipe
+     * This method asks the user for the ingredients in the recipe
      */
     public void createRecipe() {
 	String ingredient = "";// Every single ingredient
@@ -36,7 +36,7 @@ public class UserInteraction {
 	// Maybe include here the call to the ingredient class?
 
 	while (!ingredient.equals("END")) {
-	    // Assk for quantity
+	    // Asks for quantity
 	    System.out.println("Enter the quantity: ");
 	    double quantity = in.nextDouble();
 	    in.nextLine();
@@ -45,6 +45,7 @@ public class UserInteraction {
 	    System.out.println(
 		    "Select the unit of measure E(each), G(grams), M(Mililiters), C(cups), T(tablespoon), t(teaspoon) or O(ounces)");
 	    String uom = in.nextLine();
+
 	    // Validates UOM
 	    while (!uom.equals("E") && !uom.equals("G") && !uom.equals("M") && !uom.equals("C") && !uom.equals("T")
 		    && !uom.equals("t") && !uom.equals("O")) {
@@ -53,6 +54,7 @@ public class UserInteraction {
 			"Select the unit of measure E(each), G(grams),M(Mililiters) C(cups), T(tablespoon), t(teaspoon) or O(ounces)");
 		uom = in.nextLine();
 	    }
+
 	    // Populates the HashMap
 	    ingredients.put(ingredient, quantity);
 
