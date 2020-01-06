@@ -12,7 +12,7 @@ public class UserInteraction {
     private double realCalories;
 
     public void createRecipe() {
-        Scanner in = new Scanner();
+        Scanner in = new Scanner(System.in);
         System.out.println("Please enter the name of the recipe");
         recipeName = in.nextLine();
         System.out.println("Now let's enter the ingredients and the quantities. When done, please type END");
