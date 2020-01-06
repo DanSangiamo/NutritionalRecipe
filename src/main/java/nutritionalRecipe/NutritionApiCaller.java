@@ -25,7 +25,7 @@ public class NutritionApiCaller {
 		
 	}
 	
-	/**
+	/** THIS IS NOT FINISHED YET SO IT WON'T WORK PROPERLY
 	 * Gets nutritional info for an ingredient
 	 * @param ingredient the ingredient you want to get nutritional info for
 	 */
