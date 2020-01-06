@@ -68,7 +68,12 @@ public class NutritionApiCaller {
 		
 		
 	}
-
+	
+	/**
+	 * Makes the post request to get the nutritional info
+	 * @param ingredientJSON the JSON string to send in the request body
+	 * @return String containing the response with nutritional info or null if there's an error
+	 */
 	private String doPostRequest(String ingredientJSON) {
 		RequestBody body = RequestBody.create(JSON, ingredientJSON);
 		String requestUrl = nutritionURLBase + "nutrients?app_id=" + appId + "&app_key="  + appKey;
@@ -85,7 +90,13 @@ public class NutritionApiCaller {
 			return null;
 		}	
 	}
-
+	
+	/**
+	 * Creates the body for the post request to get nutritional info
+	 * @param unitOfMeasure the unit of measure for the ingredient
+	 * @param foodId the id of the food
+	 * @return String with the body for the post request.
+	 */
 	public String makePostRequestBody(String unitOfMeasure, String foodId) {
 		JSONObject currItemInfo = new JSONObject();
 		currItemInfo.put("quantity", 1);
@@ -133,6 +144,7 @@ public class NutritionApiCaller {
 		return builder.toString();
 	}
 	
+	// THIS IS JSUT FOR TESTING PURPOSES.  DELETE EVENTUALLY
 	public static void main (String[] args) {
 		Ingredient test = new Ingredient("chicken breast");
 		test.setUnitOfMeasure("Gram");
