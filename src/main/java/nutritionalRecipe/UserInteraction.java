@@ -57,6 +57,10 @@ public class UserInteraction {
 
 	    // Populates the HashMap
 	    ingredients.put(ingredient, quantity);
+	    
+	 // Asks for ingredient name
+		System.out.println("Enter the ingredient name: ");
+		ingredient = in.nextLine();
 
 	}
     }
