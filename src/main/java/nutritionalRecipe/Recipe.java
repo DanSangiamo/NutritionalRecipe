@@ -5,11 +5,13 @@ public class Recipe {
     private String name;
     private ArrayList<Ingredient> ingredients;
     private int numPortions;
+    private ArrayList<Integer> nutritionFacts;
 
     public Recipe(String name){
         ingredients=new ArrayList<Ingredient>();
         int numPortions;
         this.name=name;
+        nutritionFacts=new ArrayList<Integer>();
     }
 
     public String getName() {
@@ -37,6 +39,7 @@ public class Recipe {
         for(int i=0; i<ingredients.size(); i++) {
         totalCalories += ingredients.get(i).getCalories();
          }
+        nutritionFacts.add(totalCalories);
         return totalCalories;
     }
 
@@ -45,6 +48,7 @@ public class Recipe {
         for(int i=0; i<ingredients.size(); i++) {
             totalGramsFat+= ingredients.get(i).getFat();
         }
+        nutritionFacts.add(totalGramsFat);
         return totalGramsFat;
     }
 
@@ -53,6 +57,7 @@ public class Recipe {
         for(int i=0; i<ingredients.size(); i++) {
             totalProtein+= ingredients.get(i).getProtein();
         }
+        nutritionFacts.add(totalProtein);
         return totalProtein;
     }
 
@@ -61,6 +66,7 @@ public class Recipe {
         for(int i=0; i<ingredients.size(); i++) {
             totalCarbs+= ingredients.get(i).getCarbs();
         }
+        nutritionFacts.add(totalCarbs);
         return totalCarbs;
     }
 
@@ -69,6 +75,7 @@ public class Recipe {
         for(int i=0; i<ingredients.size(); i++) {
             totalSugar+= ingredients.get(i).getSugar();
         }
+        nutritionFacts.add(totalSugar);
         return totalSugar;
     }
 
@@ -77,8 +84,15 @@ public class Recipe {
         for(int i=0; i<ingredients.size(); i++) {
             totalFiber+= ingredients.get(i).getFiber();
         }
+        nutritionFacts.add(totalFiber);
         return totalFiber;
     }
+
+    public String toString(){
+        return name;
+    }
+
+
 
 
 
