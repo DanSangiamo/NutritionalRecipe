@@ -1,14 +1,12 @@
 package nutritionalRecipe;
-import com.opencsv.CSVWriter;
 
+import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
 
 public class RecipeBox {
-    private ArrayList<Recipe> recipes;
+    //private ArrayList<Recipe> recipes;
     private static final String CSV_FILENAME = "UserRecipes.csv";
     private static RecipeBox box;
     private File userRecipeFile;
@@ -22,9 +20,11 @@ public class RecipeBox {
         return box;
     }
 
+    /*
     public RecipeBox(){
         recipes=new ArrayList<Recipe>();
     }
+
 
     public ArrayList<Recipe> getRecipes(){
         return recipes;
@@ -34,6 +34,8 @@ public class RecipeBox {
         recipes.add(newRecipe);
     }
 
+     */
+
     public void createDatabaseFile() throws IOException {
         userRecipeFile = new File(CSV_FILENAME);
         if (!userRecipeFile.exists()) {
@@ -41,20 +43,15 @@ public class RecipeBox {
         }
     }
 
-    public void storeRecipes(){
+    public void storeRecipes(Recipe recipe){
         try {
             FileWriter fw= new FileWriter(userRecipeFile, true);
             CSVWriter csvw = new CSVWriter(fw);
-            for(Recipe r: recipes){
-                String name=r.getName();
-                String portions=String.valueOf(r.getPortions());
-
-
-
-
-            }
-            HashSet<String> rset= new HashSet<String>();
-            String[] recipeInfo ={};
+            String name=recipe.getName();
+            String portion= "serves " + String.valueOf(recipe.getPortions()) + "people";
+            String ingredients=recipe.toStringIng();
+            String nutrition=recipe.nfToString();
+            String[] recipeInfo ={name, portion, ingredients, nutrition};
             csvw.writeNext(recipeInfo);
             csvw.flush();
             csvw.close();

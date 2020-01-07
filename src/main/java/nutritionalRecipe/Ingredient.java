@@ -96,7 +96,7 @@ public class Ingredient {
 	}
 
 	public String toString(){
-		return amount + " " + unitOfMeasure + " " + name;
+		return amount + " " + unitOfMeasure + " " + name + " ";
 	}
 	
 	

@@ -88,9 +88,23 @@ public class Recipe {
         return totalFiber;
     }
 
-    public String toString(){
-        return name;
+    public String toStringIng(){
+        String ingListStr=" ";
+        for(int i=0; i<ingredients.size(); i++){
+            ingListStr+=ingredients.get(i).toString();
+        }
+        return ingListStr;
     }
+
+    public String recToString(String ingredientListString){
+        return name +" "+ ingredientListString;
+    }
+
+    public String nfToString(){
+        return "calories:" + findCalories() + ", "+ "fat:" + findFat() + "g, carbohydrates:"
+                + findCarbs()+ "g, protein:" + findProtein() + "g, fiber:" + findFiber() + "g, sugar:" + findSugar() + "g";
+    }
+
 
 
 
