@@ -2,3 +2,4 @@
 /target/
 .idea/modules.xml
 *.class
+target/classes/.DS_Store
