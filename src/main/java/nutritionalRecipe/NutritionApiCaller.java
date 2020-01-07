@@ -64,8 +64,35 @@ public class NutritionApiCaller {
 	}
 	
 	
-	private void parsePostRequest(Ingredient ingredient, String JSONstring) {
-		
+	private int parsePostRequest(Ingredient ingredient, String JSONstring) {
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject json = (JSONObject) parser.parse(JSONstring);
+			System.out.println(JSONstring);
+			System.out.println(json.keySet());
+			if (json.containsKey("totalNutrients")) {
+				json = (JSONObject) json.get("totalNutrients");
+			} else {
+				return -1;
+			}
+			
+			// Get and set calories
+			JSONObject currJson = (JSONObject) json.get("ENERC_KCAL");
+			if (currJson != null) {
+				String temp = (String) currJson.get("quantity");
+				double currVal = Double.parseDouble(temp);
+				ingredient.setCalories((int) (currVal * ingredient.getAmount())); 
+			} else {
+				ingredient.setCalories(0);
+			}
+			
+			
+			
+			return 1;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			return -1;
+		}
 		
 	}
 	
