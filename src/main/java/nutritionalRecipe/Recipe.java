@@ -1,4 +1,5 @@
 package nutritionalRecipe;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Recipe {
@@ -104,17 +105,20 @@ public class Recipe {
         return "calories:" + findCalories() + ", "+ "fat:" + findFat() + "g, carbohydrates:"
                 + findCarbs()+ "g, protein:" + findProtein() + "g, fiber:" + findFiber() + "g, sugar:" + findSugar() + "g";
     }
+    public static void main(String[] args){
+        Recipe myRecipe= new Recipe("cookies");
+        Ingredient chips= new Ingredient("chocolate chips", 1, "cup");
+        myRecipe.addIngredient(chips);
+        RecipeBox myBox= new RecipeBox();
+        try {
+            myBox.createDatabaseFile();
+            myBox.storeRecipes(myRecipe);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
-
-
-
-
-
-
-
-
-
+    }
 
 
 

@@ -42,6 +42,9 @@ public class NutritionApiCaller {
 			try {
 				JSONObject json = (JSONObject) parser.parse(response.body().string());
 				JSONArray temp = (JSONArray) json.get("hints");
+				if (temp.size() == 0) {
+					return -1;
+				}
 				JSONObject currItem = (JSONObject) temp.get(0);
 				JSONObject currItemInfo = (JSONObject) currItem.get("food");
 				String foodId = (String) currItemInfo.get("foodId");
@@ -213,7 +216,7 @@ public class NutritionApiCaller {
 	
 	// THIS IS JSUT FOR TESTING PURPOSES.  DELETE EVENTUALLY
 	public static void main (String[] args) {
-		Ingredient test = new Ingredient("spaghetti");
+		Ingredient test = new Ingredient("XXXYYY");
 		test.setUnitOfMeasure("Gram");
 		test.setAmount(100);
 		NutritionApiCaller nac = new NutritionApiCaller();

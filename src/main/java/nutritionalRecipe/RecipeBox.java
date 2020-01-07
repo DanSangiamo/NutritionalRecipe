@@ -8,9 +8,10 @@ import java.io.IOException;
 public class RecipeBox {
     //private ArrayList<Recipe> recipes;
     private static final String CSV_FILENAME = "UserRecipes.csv";
-    private static RecipeBox box;
+    //private static RecipeBox box;
     private File userRecipeFile;
 
+    /*
     public void init() throws IOException {
         createDatabaseFile();
         box = this;
@@ -48,7 +49,7 @@ public class RecipeBox {
             FileWriter fw= new FileWriter(userRecipeFile, true);
             CSVWriter csvw = new CSVWriter(fw);
             String name=recipe.getName();
-            String portion= "serves " + String.valueOf(recipe.getPortions()) + "people";
+            String portion= "serves " + String.valueOf(recipe.getPortions()) + " people";
             String ingredients=recipe.toStringIng();
             String nutrition=recipe.nfToString();
             String[] recipeInfo ={name, portion, ingredients, nutrition};
@@ -60,5 +61,6 @@ public class RecipeBox {
         }
 
     }
+
 
 }
