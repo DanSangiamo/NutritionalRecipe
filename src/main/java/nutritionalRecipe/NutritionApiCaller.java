@@ -25,7 +25,7 @@ public class NutritionApiCaller {
 		
 	}
 	
-	/** THIS IS NOT FINISHED YET SO IT WON'T WORK PROPERLY
+	/** 
 	 * Gets nutritional info for an ingredient
 	 * @param ingredient the ingredient you want to get nutritional info for
 	 */
@@ -33,7 +33,6 @@ public class NutritionApiCaller {
 		String name = urlEncodeString(ingredient.getName());
 		String requestUrl = nutritionURLBase + "parser?ingr=" + name +
 				"&app_id=" + appId + "&app_key="  + appKey; 
-		System.out.println(requestUrl);
 		Request request = new Request.Builder()
 				.url(requestUrl)
 				.build();
@@ -42,17 +41,21 @@ public class NutritionApiCaller {
 			JSONParser parser = new JSONParser();
 			try {
 				JSONObject json = (JSONObject) parser.parse(response.body().string());
-				System.out.println(json.keySet());
 				JSONArray temp = (JSONArray) json.get("hints");
 				JSONObject currItem = (JSONObject) temp.get(0);
 				JSONObject currItemInfo = (JSONObject) currItem.get("food");
 				String foodId = (String) currItemInfo.get("foodId");
 				String ingredientJSON = makePostRequestBody(ingredient.getUnitOfMeasure(),
 						foodId);
-				System.out.println(ingredientJSON);
 				String nutritionalInfoJSONString = doPostRequest(ingredientJSON);
-				parsePostRequest(ingredient, nutritionalInfoJSONString);
-				return 1;
+				if (nutritionalInfoJSONString == null) {
+					return -1;
+				}
+				if (parsePostRequest(ingredient, nutritionalInfoJSONString) == 1) {
+					return 1;
+				} else {
+					return -1;
+				}		
 			} catch (ParseException e) {
 				return -1;
 			}
@@ -68,8 +71,6 @@ public class NutritionApiCaller {
 		JSONParser parser = new JSONParser();
 		try {
 			JSONObject json = (JSONObject) parser.parse(JSONstring);
-			System.out.println(JSONstring);
-			System.out.println(json.keySet());
 			if (json.containsKey("totalNutrients")) {
 				json = (JSONObject) json.get("totalNutrients");
 			} else {
@@ -79,18 +80,59 @@ public class NutritionApiCaller {
 			// Get and set calories
 			JSONObject currJson = (JSONObject) json.get("ENERC_KCAL");
 			if (currJson != null) {
-				String temp = (String) currJson.get("quantity");
-				double currVal = Double.parseDouble(temp);
+				double currVal = (Double) currJson.get("quantity");
 				ingredient.setCalories((int) (currVal * ingredient.getAmount())); 
 			} else {
 				ingredient.setCalories(0);
 			}
 			
+			// Get and set carbs
+			currJson = (JSONObject) json.get("CHOCDF");
+			if (currJson != null) {
+				double currVal = (Double) currJson.get("quantity");
+				ingredient.setCarbs((int) (currVal * ingredient.getAmount())); 
+			} else {
+				ingredient.setCarbs(0);
+			}
 			
+			// Get and set protein
+			currJson = (JSONObject) json.get("PROCNT");
+			if (currJson != null) {
+				double currVal = (Double) currJson.get("quantity");
+				ingredient.setProtein((int) (currVal * ingredient.getAmount())); 
+			} else {
+				ingredient.setProtein(0);
+			}
+			
+			// Get and set fat
+			currJson = (JSONObject) json.get("FAT");
+			if (currJson != null) {
+				double currVal = (Double) currJson.get("quantity");
+				ingredient.setFat((int) (currVal * ingredient.getAmount())); 
+			} else {
+				ingredient.setFat(0);
+			}
+			
+			// Get and set sugar
+			currJson = (JSONObject) json.get("SUGAR");
+			if (currJson != null) {
+				double currVal = (Double) currJson.get("quantity");
+				ingredient.setSugar((int) (currVal * ingredient.getAmount())); 
+			} else {
+				ingredient.setSugar(0);
+			}
+			
+			// Get and set fiber
+			currJson = (JSONObject) json.get("FIBTG");
+			if (currJson != null) {
+				double currVal = (Double) currJson.get("quantity");
+				ingredient.setFiber((int) (currVal * ingredient.getAmount())); 
+			} else {
+				ingredient.setFiber(0);
+			}
 			
 			return 1;
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			return -1;
 		}
 		
@@ -113,7 +155,6 @@ public class NutritionApiCaller {
 			response = client.newCall(request).execute();
 			return response.body().string();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return null;
 		}	
 	}
@@ -135,7 +176,6 @@ public class NutritionApiCaller {
 			unitOfMeasure = new String(temp);
 		}
 		String measureURI = "http://www.edamam.com/ontologies/edamam.owl#Measure_";
-		System.out.println(measureURI);
 		currItemInfo.put("measureURI", measureURI + unitOfMeasure);
 		currItemInfo.put("foodId", foodId);
 		
@@ -173,9 +213,11 @@ public class NutritionApiCaller {
 	
 	// THIS IS JSUT FOR TESTING PURPOSES.  DELETE EVENTUALLY
 	public static void main (String[] args) {
-		Ingredient test = new Ingredient("chicken breast");
+		Ingredient test = new Ingredient("spaghetti");
 		test.setUnitOfMeasure("Gram");
+		test.setAmount(100);
 		NutritionApiCaller nac = new NutritionApiCaller();
 		nac.makeNutritionalCall(test);
+		System.out.println(test);
 	}
 }
