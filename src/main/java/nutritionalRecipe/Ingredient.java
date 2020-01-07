@@ -94,6 +94,10 @@ public class Ingredient {
 	public void setFiber(int fiber) {
 		this.fiber = fiber;
 	}
+
+	public String toString(){
+		return amount + " " + unitOfMeasure + " " + name + " ";
+	}
 	
 	
 
