@@ -18,7 +18,6 @@ public class Ingredient {
 	}
 	
 	public Ingredient(String name, double amount, String unitOfMeasure) {
-		this.name = name;
 		this.amount = amount;
 		this.unitOfMeasure = unitOfMeasure;
 	}
