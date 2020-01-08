@@ -81,7 +81,7 @@ public class UserInteraction {
 
 	    }
 
-	    // This lines only execute if the ingredient is new
+	    // These lines only execute if the ingredient is new
 	    if (ingExists == 2) {
 		System.out.println(
 			"**************************************************************************************\n"
@@ -113,7 +113,7 @@ public class UserInteraction {
 		in.nextLine();
 	    }
 
-	    // Populates the HashMap;
+	    // Populates the HashMap with ingredients;
 	    listOfIngredients.put(currentIngredient, ing);
 
 	    // Asks for next ingredient name
@@ -123,18 +123,19 @@ public class UserInteraction {
 	}
 	in.close();
 
-	// Lists of ingredients
+	// Prints list of ingredients and amounts
 	System.out.println(
-		"**********************************************************************************************");
-	System.out.println("* These are the ingredients entered to prepared " + numberOfPortions + " portions of "
-		+ recipeName + ". *");
-	System.out.println("Ingredient Name\t\t\t\t\t\t Quantity");
+		"***********************************************************************************************************************");
+	System.out.printf("%-117s%2s\n","* These are the ingredients entered to prepared " + "12" + " portions of "
+		+ "Bread","*");
+	System.out.printf("%-50s%12s%57s\n","* Ingredient Name","Quantity","*");
 	for (String key : listOfIngredients.keySet()) {
-	    System.out.println(listOfIngredients.get(key).getName() + "\t\t\t\t\t\t"
-		    + listOfIngredients.get(key).getAmount() + " " + listOfIngredients.get(key).getUnitOfMeasure());
+
+	    System.out.printf("%-50s%10.2f%-58s%1s\n", "* " + listOfIngredients.get(key).getName(), listOfIngredients.get(key).getAmount(),
+		    " " + listOfIngredients.get(key).getUnitOfMeasure(),"*");
 	}
 	System.out.println(
-		"**********************************************************************************************");
+		"***********************************************************************************************************************");
 	return listOfIngredients;
     }
 
@@ -181,5 +182,19 @@ public class UserInteraction {
 	}
 	in.close();
 
+    }
+
+    /**
+     * @return the recipeName
+     */
+    public String getRecipeName() {
+	return recipeName;
+    }
+
+    /**
+     * @return the numberOfPortions
+     */
+    public int getNumberOfPortions() {
+	return numberOfPortions;
     }
 }
