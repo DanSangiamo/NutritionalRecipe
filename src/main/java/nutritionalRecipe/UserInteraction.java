@@ -1,5 +1,6 @@
 package nutritionalRecipe;
 
+import java.awt.font.NumericShaper;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -8,7 +9,7 @@ import java.util.Scanner;
  */
 public class UserInteraction {
     private String recipeName;
-    private HashMap<String, Ingredient> recipe = new HashMap<String, Ingredient>();
+    private HashMap<String, Ingredient> listOfIngredients = new HashMap<String, Ingredient>();
     private double ingredientQuantity;
     private int numberOfPortions;
     private double guessedCalories;
@@ -95,7 +96,7 @@ public class UserInteraction {
 			+ ing.getUnitOfMeasure() + " of " + ing.getName());
 		ing.setCarbs(in.nextInt());
 		in.nextLine();
-		System.out.println("Now it's fat turns. How much fat is in " + ing.getAmount() + " "
+		System.out.println("Now it's fat turn. How much fat is in " + ing.getAmount() + " "
 			+ ing.getUnitOfMeasure() + " of " + ing.getName());
 		ing.setFat(in.nextInt());
 		in.nextLine();
@@ -104,7 +105,7 @@ public class UserInteraction {
 		ing.setProtein(in.nextInt());
 		in.nextLine();
 		System.out.println("And sugar?. How much sugar is in " + ing.getAmount() + " " + ing.getUnitOfMeasure()
-			+ " of " + ing.getName());
+		+ " of " + ing.getName());
 		ing.setSugar(in.nextInt());
 		in.nextLine();
 		System.out.println("And finally fibers. How much fiber is in " + ing.getAmount() + " "
@@ -114,13 +115,57 @@ public class UserInteraction {
 	    }
 
 	    // Populates the HashMap;
-	    recipe.put(currentIngredient, ing);
+	    listOfIngredients.put(currentIngredient, ing);
 
 	    // Asks for ingredient name
 	    System.out.println("Enter the ingredient name: ");
 	    currentIngredient = in.nextLine();
 	}
-	return recipe;
+	in.close();
+	return listOfIngredients;
+    }
+
+    /**
+     * THis method asks the user to guess the calories per portion
+     * 
+     * @param recipe
+     */
+    public void guessCalories(Recipe recipe) {
+	double caloriesPerPortion = (double) recipe.findCalories() / recipe.getPortions();
+	int maxCalories = 0;
+	String maxIngredient = "";
+
+	// Calculates ingredient with highest calorie count
+	for (String key : listOfIngredients.keySet()) {
+	    if (listOfIngredients.get(key).getCalories() >= maxCalories) {
+		maxCalories = listOfIngredients.get(key).getCalories();
+		maxIngredient = listOfIngredients.get(key).getName();
+	    }
+	}
+
+	// Asks user to guess the calories
+	Scanner in = new Scanner(System.in);
+	System.out.println("*************************************************************");
+	System.out.println("Can you guess how many calories your recipe has per portion?.\nEnter the amount: ");
+	double guessedCalories = in.nextDouble();
+	in.hasNextLine();
+
+	// Compares the answer with the correct answer +/- 2% calories
+	double tolerance = caloriesPerPortion * 0.025;
+	if (Math.abs(caloriesPerPortion - guessedCalories) > tolerance) {
+	    System.out.println("You're off by more than 2.5%. The correct amount is: " + caloriesPerPortion
+		    + ".\n The ingredient with the highest number of calories is " + maxIngredient + " with "
+		    + maxCalories / numberOfPortions + " calories per portion.\nThat's "
+		    + maxCalories / numberOfPortions / caloriesPerPortion
+		    + "% of the total.\n We're going to look for a potentail subsitute.");
+	} else {
+	    System.out.println("That's great! Your guessed the correct amount within a 2.5% tolerance. The correct amount is: " + caloriesPerPortion
+		    + ".\n The ingredient with the highest number of calories is " + maxIngredient + " with "
+		    + maxCalories / numberOfPortions + " calories per portion.\nThat's "
+		    + maxCalories / numberOfPortions / caloriesPerPortion
+		    + "% of the total.\n We're going to look for a potentail subsitute.");
+	}
+	
 
     }
 }
