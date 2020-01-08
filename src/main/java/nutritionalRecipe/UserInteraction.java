@@ -1,6 +1,5 @@
 package nutritionalRecipe;
 
-import java.awt.font.NumericShaper;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -10,13 +9,12 @@ import java.util.Scanner;
 public class UserInteraction {
     private String recipeName;
     private HashMap<String, Ingredient> listOfIngredients = new HashMap<String, Ingredient>();
-    private double ingredientQuantity;
     private int numberOfPortions;
-    private double guessedCalories;
-    private double realCalories;
 
     /**
      * This method asks the user for the ingredients in the recipe
+     * 
+     * @return a HashMap with the ingredients, amount and UOM
      */
     public HashMap<String, Ingredient> createRecipe() {
 	NutritionApiCaller callApi = new NutritionApiCaller();
@@ -29,10 +27,10 @@ public class UserInteraction {
 	System.out.println("How many servings/portions are in this recipe?");
 	numberOfPortions = in.nextInt();
 	in.nextLine();
-	System.out.println("Now let's enter the ingredients and the quantities. When done, please type END");
+	System.out.println("Now let's enter the ingredients and the quantities.");
 
 	// Asks for ingredient name
-	System.out.println("Enter the ingredient name: ");
+	System.out.println("Enter the ingredient name (type END when done): ");
 	currentIngredient = in.nextLine();
 	Ingredient ing = new Ingredient(currentIngredient);
 
@@ -41,7 +39,8 @@ public class UserInteraction {
 
 	    // Asks for UOM
 	    System.out.println(
-		    "Select the unit of measure:  Whole, Gram, Kilogram, Liter, Milliliter, Ounce, Pound, Pinch, Fluid Ounce, Gallon, Pint, Quart, Drop, Cup, Tablespoon, Teaspoon");
+		    "Select the unit of measure:  Whole, Gram, Kilogram, Liter, Milliliter, Ounce, Pound, Pinch,\n                             "
+			    + "Fluid Ounce, Gallon, Pint, Quart, Drop, Cup, Tablespoon, Teaspoon.");
 	    String uom = in.nextLine();
 
 	    // Validates UOM
@@ -117,16 +116,30 @@ public class UserInteraction {
 	    // Populates the HashMap;
 	    listOfIngredients.put(currentIngredient, ing);
 
-	    // Asks for ingredient name
-	    System.out.println("Enter the ingredient name: ");
+	    // Asks for next ingredient name
+	    System.out.println("Enter the next ingredient name (type END when done): ");
 	    currentIngredient = in.nextLine();
+	    ing = new Ingredient(currentIngredient);
 	}
 	in.close();
+
+	// Lists of ingredients
+	System.out.println(
+		"**********************************************************************************************");
+	System.out.println("* These are the ingredients entered to prepared " + numberOfPortions + " portions of "
+		+ recipeName + ". *");
+	System.out.println("Ingredient Name\t\t\t\t\t\t Quantity");
+	for (String key : listOfIngredients.keySet()) {
+	    System.out.println(listOfIngredients.get(key).getName() + "\t\t\t\t\t\t"
+		    + listOfIngredients.get(key).getAmount() + " " + listOfIngredients.get(key).getUnitOfMeasure());
+	}
+	System.out.println(
+		"**********************************************************************************************");
 	return listOfIngredients;
     }
 
     /**
-     * THis method asks the user to guess the calories per portion
+     * This method asks the user to guess the calories per portion
      * 
      * @param recipe
      */
@@ -150,7 +163,7 @@ public class UserInteraction {
 	double guessedCalories = in.nextDouble();
 	in.hasNextLine();
 
-	// Compares the answer with the correct answer +/- 2% calories
+	// Compares the answer with the correct answer +/- 2.5% calories
 	double tolerance = caloriesPerPortion * 0.025;
 	if (Math.abs(caloriesPerPortion - guessedCalories) > tolerance) {
 	    System.out.println("You're off by more than 2.5%. The correct amount is: " + caloriesPerPortion
@@ -159,13 +172,14 @@ public class UserInteraction {
 		    + maxCalories / numberOfPortions / caloriesPerPortion
 		    + "% of the total.\n We're going to look for a potentail subsitute.");
 	} else {
-	    System.out.println("That's great! Your guessed the correct amount within a 2.5% tolerance. The correct amount is: " + caloriesPerPortion
-		    + ".\n The ingredient with the highest number of calories is " + maxIngredient + " with "
-		    + maxCalories / numberOfPortions + " calories per portion.\nThat's "
-		    + maxCalories / numberOfPortions / caloriesPerPortion
-		    + "% of the total.\n We're going to look for a potentail subsitute.");
+	    System.out.println(
+		    "That's great! Your guessed the correct amount within a 2.5% tolerance. The correct amount is: "
+			    + caloriesPerPortion + ".\n The ingredient with the highest number of calories is "
+			    + maxIngredient + " with " + maxCalories / numberOfPortions
+			    + " calories per portion.\nThat's " + maxCalories / numberOfPortions / caloriesPerPortion
+			    + "% of the total.\n We're going to look for a potentail subsitute.");
 	}
-	
+	in.close();
 
     }
 }
