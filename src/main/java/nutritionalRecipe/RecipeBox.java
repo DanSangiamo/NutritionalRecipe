@@ -44,11 +44,9 @@ public class RecipeBox {
         try {
             FileWriter fw= new FileWriter(userRecipeFile, true);
             CSVWriter csvw = new CSVWriter(fw);
-            String name=recipe.getName();
-            String portion= "serves " + String.valueOf(recipe.getPortions()) + " people";
-            String ingredients=recipe.toStringIngredients();
+            String recipeStr=recipe.toStringRecipe();
             String nutrition=recipe.nfToString();
-            String[] recipeInfo ={name, portion, ingredients, nutrition};
+            String[] recipeInfo ={recipeStr, nutrition};
             csvw.writeNext(recipeInfo);
             csvw.flush();
             csvw.close();

@@ -92,24 +92,15 @@ public class Recipe {
     }
 
     /**
-     * converts list of ingredients to a String
+     * converts recipe with ingredients to String
      * @return
      */
-    public String toStringIngredients(){
+    public String toStringRecipe(){
         String ingListStr=" ";
         for(int i=0; i<ingredients.size(); i++){
             ingListStr+=ingredients.get(i).toString()+ " ";
         }
-        return ingListStr;
-    }
-
-    /**
-     * converts recipe to String
-     * @param ingredientListString
-     * @return
-     */
-    public String recToString(String ingredientListString){
-        return name +" "+ ingredientListString;
+        return name + " serves " + getPortions() + " people," + ingListStr;
     }
 
     /**
