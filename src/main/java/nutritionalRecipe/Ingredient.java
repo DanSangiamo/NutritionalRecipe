@@ -99,6 +99,17 @@ public class Ingredient {
 		return amount + " " + unitOfMeasure + " " + name + " ";
 	}
 	
-	
+	public boolean equals(Object o) {
+		if (!(o instanceof Ingredient)) {
+			return false;
+		} else {
+			Ingredient comp = (Ingredient) o;
+			if (comp.getName() == this.name) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 
 }
