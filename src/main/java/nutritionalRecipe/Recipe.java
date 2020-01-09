@@ -1,4 +1,10 @@
 package nutritionalRecipe;
+
+/**
+ * this class represents a Recipe object that includes a list of ingredients, a specified number of servings, and the nutrition facts
+ * of one portion
+ */
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -6,13 +12,13 @@ public class Recipe {
     private String name;
     private ArrayList<Ingredient> ingredients;
     private int numPortions;
-    private ArrayList<Integer> nutritionFacts;
+    private ArrayList<Double> nutritionFacts;
 
     public Recipe(String name){
         ingredients=new ArrayList<Ingredient>();
         int numPortions;
         this.name=name;
-        nutritionFacts=new ArrayList<Integer>();
+        nutritionFacts=new ArrayList<Double>();
     }
 
     public String getName() {
@@ -27,101 +33,93 @@ public class Recipe {
         return numPortions;
     }
 
+    /**
+     * gets list of ingredients
+     * @return
+     */
     public ArrayList<Ingredient> getIngredients() {
         return ingredients;
     }
 
+    /**
+     * adds ingredient to recipe
+     * @param newIngredient
+     */
     public void addIngredient(Ingredient newIngredient){
         ingredients.add(newIngredient);
     }
 
-    public int findCalories(){
-        int totalCalories=0;
+    /**
+     * calculate nutrition facts of one portion of the recipe
+     */
+    public void calcNutritionFactsPerPortion(){
+        double totalCalories=0;
         for(int i=0; i<ingredients.size(); i++) {
-        totalCalories += ingredients.get(i).getCalories();
-         }
+            totalCalories += (ingredients.get(i).getCalories()/numPortions;
+        }
         nutritionFacts.add(totalCalories);
-        return totalCalories;
-    }
 
-    public int findFat(){
-        int totalGramsFat=0;
+        double totalGramsFat=0;
         for(int i=0; i<ingredients.size(); i++) {
-            totalGramsFat+= ingredients.get(i).getFat();
+            totalGramsFat+= (ingredients.get(i).getFat()/numPortions);
         }
         nutritionFacts.add(totalGramsFat);
-        return totalGramsFat;
-    }
 
-    public int findProtein(){
-        int totalProtein=0;
+        double totalProtein=0;
         for(int i=0; i<ingredients.size(); i++) {
-            totalProtein+= ingredients.get(i).getProtein();
+            totalProtein+= (ingredients.get(i).getProtein()/numPortions);
         }
         nutritionFacts.add(totalProtein);
-        return totalProtein;
-    }
 
-    public int findCarbs(){
-        int totalCarbs=0;
+        double totalCarbohydrates=0;
         for(int i=0; i<ingredients.size(); i++) {
-            totalCarbs+= ingredients.get(i).getCarbs();
+            totalCarbohydrates+= (ingredients.get(i).getCarbs()/numPortions);
         }
-        nutritionFacts.add(totalCarbs);
-        return totalCarbs;
-    }
+        nutritionFacts.add(totalCarbohydrates);
 
-    public int findSugar(){
-        int totalSugar=0;
+        double totalSugar=0;
         for(int i=0; i<ingredients.size(); i++) {
-            totalSugar+= ingredients.get(i).getSugar();
+            totalSugar+= (ingredients.get(i).getSugar()/numPortions);
         }
         nutritionFacts.add(totalSugar);
-        return totalSugar;
-    }
 
-    public int findFiber(){
-        int totalFiber=0;
+        double totalFiber=0;
         for(int i=0; i<ingredients.size(); i++) {
-            totalFiber+= ingredients.get(i).getFiber();
+            totalFiber+= (ingredients.get(i).getFiber());
         }
         nutritionFacts.add(totalFiber);
-        return totalFiber;
+
     }
 
-    public String toStringIng(){
+    /**
+     * converts list of ingredients to a String
+     * @return
+     */
+    public String toStringIngredients(){
         String ingListStr=" ";
         for(int i=0; i<ingredients.size(); i++){
-            ingListStr+=ingredients.get(i).toString();
+            ingListStr+=ingredients.get(i).toString()+ " ";
         }
         return ingListStr;
     }
 
+    /**
+     * converts recipe to String
+     * @param ingredientListString
+     * @return
+     */
     public String recToString(String ingredientListString){
         return name +" "+ ingredientListString;
     }
 
+    /**
+     * converts nutrition facts to String
+     * @return
+     */
     public String nfToString(){
-        return "calories:" + findCalories() + ", "+ "fat:" + findFat() + "g, carbohydrates:"
-                + findCarbs()+ "g, protein:" + findProtein() + "g, fiber:" + findFiber() + "g, sugar:" + findSugar() + "g";
+        return "calories:" + nutritionFacts.get(0) + ", "+ "fat:" + nutritionFacts.get(1) + "g, protein:" + nutritionFacts.get(2) +"g, carbohydrates:"
+                + nutritionFacts.get(3)+ "g, sugar:" + nutritionFacts.get(4) + "g, fiber:" + nutritionFacts.get(5) + "g";
     }
-    public static void main(String[] args){
-        Recipe myRecipe= new Recipe("cookies");
-        Ingredient chips= new Ingredient("chocolate chips", 1, "cup");
-        myRecipe.addIngredient(chips);
-        RecipeBox myBox= new RecipeBox();
-        try {
-            myBox.createDatabaseFile();
-            myBox.storeRecipes(myRecipe);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-
-
 
 
 }
