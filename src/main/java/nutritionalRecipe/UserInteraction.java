@@ -14,6 +14,8 @@ public class UserInteraction {
     /**
      * This method asks the user for the ingredients in the recipe
      * 
+     * @return
+     * 
      * @return a HashMap with the ingredients, amount and UOM
      */
     public Recipe createRecipe() {
@@ -22,6 +24,8 @@ public class UserInteraction {
 	String currentIngredient = "";// Every single ingredient
 	Scanner in = new Scanner(System.in);
 
+	System.out.println(
+		"***********************************************************************************************************************");
 	System.out.println("Please enter the name of the recipe");
 	recipeName = in.nextLine();
 
@@ -29,13 +33,13 @@ public class UserInteraction {
 	Recipe currentRecipe = new Recipe(recipeName);
 
 	// Asks for number of portions
-	System.out.println("How many servings/portions are in this recipe?");
+	System.out.println("\nHow many servings/portions are in this recipe?");
 	numberOfPortions = in.nextInt();
 	in.nextLine();
 	currentRecipe.setPortions(numberOfPortions);
 
 	// Asks for ingredient name
-	System.out.println("Now let's enter the ingredients and the quantities.");
+	System.out.println("\nNow let's enter the ingredients and the quantities.");
 	System.out.println("Enter the ingredient name (type END when done): ");
 	currentIngredient = in.nextLine();
 	Ingredient ing = new Ingredient(currentIngredient);
@@ -45,7 +49,7 @@ public class UserInteraction {
 
 	    // Asks for UOM
 	    System.out.println(
-		    "Select the unit of measure:  Whole, Gram, Kilogram, Liter, Milliliter, Ounce, Pound, Pinch,\n                             "
+		    "\nSelect the unit of measure:  Whole, Gram, Kilogram, Liter, Milliliter, Ounce, Pound, Pinch,\n                             "
 			    + "Fluid Ounce, Gallon, Pint, Quart, Drop, Cup, Tablespoon, Teaspoon.");
 	    String uom = in.nextLine();
 
@@ -57,13 +61,13 @@ public class UserInteraction {
 		    && !uom.equals("Teaspoon")) {
 		System.out.println("Incorrect entry. Please try again");
 		System.out.println(
-			"Select the unit of measure:  Whole, Gram, Kilogram, Liter, Milliliter, Ounce, Pound, Pinch, Fluid Ounce, Gallon, Pint, Quart, Drop, Cup, Tablespoon, Teaspoon");
+			"\nSelect the unit of measure:  Whole, Gram, Kilogram, Liter, Milliliter, Ounce, Pound, Pinch, Fluid Ounce, Gallon, Pint, Quart, Drop, Cup, Tablespoon, Teaspoon");
 		uom = in.nextLine();
 	    }
 	    ing.setUnitOfMeasure(uom);
 
 	    // Asks for quantity
-	    System.out.println("Enter the quantity: ");
+	    System.out.println("\nEnter the quantity: ");
 	    double quantity = in.nextDouble();
 	    in.nextLine();
 	    ing.setAmount(quantity);
@@ -72,17 +76,17 @@ public class UserInteraction {
 	    int ingExists = callApi.makeNutritionalCall(ing);
 
 	    while (ingExists == -1) {
-		System.out.println("I can't find the ingredient. Please check the spelling. You entered: \""
+		System.out.println("\nI can't find the ingredient. Please check the spelling. You entered: \""
 			+ currentIngredient + "\" \nIs this the correct name? (Y/N)");
 		String answer = in.nextLine();
 		if (answer.equals("N")) {
-		    System.out.println("Enter the ingredient name: ");
+		    System.out.println("\nEnter the ingredient name: ");
 		    currentIngredient = in.nextLine();
 		    ingExists = callApi.makeNutritionalCall(ing);
 		} else if (answer.equals("Y")) {
 		    ingExists = 2;
 		} else {
-		    System.out.println("Incorrect entry. Please try again.");
+		    System.out.println("\nIncorrect entry. Please try again.");
 		}
 
 	    }
@@ -119,30 +123,32 @@ public class UserInteraction {
 		in.nextLine();
 	    }
 
-	    // Adds the ingredient to the ArrayList
-	    listOfIngredients.add(ing);
+	    // Adds the ingredient to the recipe
+	    currentRecipe.addIngredient(ing);
 
 	    // Asks for next ingredient name
-	    System.out.println("Enter the next ingredient name (type END when done): ");
+	    System.out.println("\nEnter the next ingredient name (type END when done): ");
 	    currentIngredient = in.nextLine();
 
 	    // Creates a new instance of Ingredient
-	    ing = new Ingredient(currentIngredient);
+	    if (!currentIngredient.equals("END"))
+		ing = new Ingredient(currentIngredient);
 	}
 
 	// Prints list of ingredients and amounts
 	System.out.println(
 		"***********************************************************************************************************************");
 	System.out.printf("%-117s%2s\n",
-		"* These are the ingredients entered to prepare " + "12" + " portions of " + "Bread", "*");
+		"* These are the ingredients entered to prepare " + numberOfPortions + " portions of " + recipeName , "*");
 	System.out.printf("%-50s%12s%57s\n", "* Ingredient Name", "Quantity", "*");
-	for (Ingredient ingredient : listOfIngredients) {
+	for (Ingredient ingredient : currentRecipe.getIngredients()) {
 
 	    System.out.printf("%-50s%10.2f%-58s%1s\n", "* " + ingredient.getName(), ingredient.getAmount(),
 		    " " + ingredient.getUnitOfMeasure(), "*");
 	}
 	System.out.println(
 		"***********************************************************************************************************************");
+
 	return currentRecipe;
 
     }
@@ -152,13 +158,14 @@ public class UserInteraction {
      * 
      * @param recipe
      */
-    public void guessCalories(Recipe recipe) {
+    public Recipe guessCalories(Recipe recipe) {
+
 	double caloriesPerPortion = (double) recipe.findCalories() / recipe.getPortions();
 	int maxCalories = 0;
 	String maxIngredient = "";
 
 	// Calculates ingredient with highest calorie count
-	for (Ingredient ingredient : listOfIngredients) {
+	for (Ingredient ingredient : recipe.getIngredients()) {
 	    if (ingredient.getCalories() >= maxCalories) {
 		maxCalories = ingredient.getCalories();
 		maxIngredient = ingredient.getName();
@@ -167,7 +174,8 @@ public class UserInteraction {
 
 	// Asks user to guess the calories
 	Scanner in = new Scanner(System.in);
-	System.out.println("\n\n\n\n*************************************************************");
+	System.out.println(
+		"\n\n\n\n***********************************************************************************************************************");
 	System.out.println("Can you guess how many calories your recipe has per portion?.\nEnter the amount: ");
 	Double guessedCalories = in.nextDouble();
 	in.hasNextLine();
@@ -175,19 +183,29 @@ public class UserInteraction {
 	// Compares the answer with the correct answer +/- 2.5% calories
 	double tolerance = caloriesPerPortion * 0.025;
 	if (Math.abs(caloriesPerPortion - guessedCalories) > tolerance) {
+	    System.out.println(
+		    "\n***********************************************************************************************************************");
 	    System.out.println("You're off by more than 2.5%. The correct amount is: " + caloriesPerPortion
-		    + ".\n The ingredient with the highest number of calories is " + maxIngredient + " with "
+		    + ".\n\nThe ingredient with the highest number of calories is " + maxIngredient + " with "
 		    + maxCalories / numberOfPortions + " calories per portion.\nThat's "
-		    + maxCalories / numberOfPortions / caloriesPerPortion
-		    + "% of the total.\n We're going to look for a potential subsitute.");
+		    + (int)((maxCalories / numberOfPortions / caloriesPerPortion)*100)
+		    + "% of the total.\n\n\nWe're going to look for a potential subsitute.");
 	} else {
 	    System.out.println(
-		    "That's great! Your guessed the correct amount within a 2.5% tolerance. The correct amount is: "
-			    + caloriesPerPortion + ".\n The ingredient with the highest number of calories is "
+		    "\n***********************************************************************************************************************"
+		    + "\nThat's great! You guessed the correct amount within a 2.5% tolerance. The correct amount is: "
+			    + caloriesPerPortion + ".\nThe ingredient with the highest number of calories is "
 			    + maxIngredient + " with " + maxCalories / numberOfPortions
 			    + " calories per portion.\nThat's " + maxCalories / numberOfPortions / caloriesPerPortion
-			    + "% of the total.\n We're going to look for a potentail subsitute.");
+			    + "% of the total.\n\n\nWe're going to look for a potentail subsitute.");
 	}
+	System.out.println("\nCan you guess the ingredient with the higest calories per portion?");
+	
+	
 	in.close();
+	return recipe;
+
     }
+    
+    private void guessIngredient(Recipe)
 }
