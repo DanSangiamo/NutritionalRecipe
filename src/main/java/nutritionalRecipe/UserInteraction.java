@@ -206,6 +206,4 @@ public class UserInteraction {
 	return recipe;
 
     }
-    
-    private void guessIngredient(Recipe)
 }
