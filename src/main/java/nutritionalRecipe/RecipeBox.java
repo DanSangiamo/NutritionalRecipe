@@ -10,27 +10,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class RecipeBox {
-    private static final String CSV_FILENAME = "UserRecipes.csv";
-    //private static RecipeBox box;
+    private static final String RECIPE_FILENAME = "UserRecipes.csv";
     private File userRecipeFile;
-
-    /*
-    public void init() throws IOException {
-        createDatabaseFile();
-        box = this;
-    }
-
-    public static RecipeBox getInstance() {
-        return box;
-    }
-    */
 
     /**
      * creates csv file if one does not exist
      * @throws IOException
      */
     public void createRecipeFile() throws IOException {
-        userRecipeFile = new File(CSV_FILENAME);
+        userRecipeFile = new File(RECIPE_FILENAME);
         if (!userRecipeFile.exists()) {
             userRecipeFile.createNewFile();
         }
