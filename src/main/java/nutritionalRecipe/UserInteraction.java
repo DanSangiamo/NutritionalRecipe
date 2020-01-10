@@ -159,51 +159,92 @@ public class UserInteraction {
      * @param recipe
      */
     public Recipe guessCalories(Recipe recipe) {
-
-	double caloriesPerPortion = (double) recipe.findCalories() / recipe.getPortions();
-	int maxCalories = 0;
-	String maxIngredient = "";
-
-	// Calculates ingredient with highest calorie count
-	for (Ingredient ingredient : recipe.getIngredients()) {
-	    if (ingredient.getCalories() >= maxCalories) {
-		maxCalories = ingredient.getCalories();
-		maxIngredient = ingredient.getName();
-	    }
-	}
-
-	// Asks user to guess the calories
-	Scanner in = new Scanner(System.in);
-	System.out.println(
-		"\n\n\n\n***********************************************************************************************************************");
-	System.out.println("Can you guess how many calories your recipe has per portion?.\nEnter the amount: ");
-	Double guessedCalories = in.nextDouble();
-	in.hasNextLine();
-
-	// Compares the answer with the correct answer +/- 2.5% calories
-	double tolerance = caloriesPerPortion * 0.025;
-	if (Math.abs(caloriesPerPortion - guessedCalories) > tolerance) {
-	    System.out.println(
-		    "\n***********************************************************************************************************************");
-	    System.out.println("You're off by more than 2.5%. The correct amount is: " + caloriesPerPortion
-		    + ".\n\nThe ingredient with the highest number of calories is " + maxIngredient + " with "
-		    + maxCalories / numberOfPortions + " calories per portion.\nThat's "
-		    + (int)((maxCalories / numberOfPortions / caloriesPerPortion)*100)
-		    + "% of the total.\n\n\nWe're going to look for a potential subsitute.");
-	} else {
-	    System.out.println(
-		    "\n***********************************************************************************************************************"
-		    + "\nThat's great! You guessed the correct amount within a 2.5% tolerance. The correct amount is: "
-			    + caloriesPerPortion + ".\nThe ingredient with the highest number of calories is "
-			    + maxIngredient + " with " + maxCalories / numberOfPortions
-			    + " calories per portion.\nThat's " + maxCalories / numberOfPortions / caloriesPerPortion
-			    + "% of the total.\n\n\nWe're going to look for a potentail subsitute.");
-	}
-	System.out.println("\nCan you guess the ingredient with the higest calories per portion?");
+	    recipe.calcNutritionFactsPerPortion();
+	    int numberOfPortions = recipe.getPortions();
+		double caloriesPerPortion = recipe.getNutritionFacts().get(0);
+		int maxCalories = 0;
+		Ingredient maxIngredient = recipe.getIngredients().get(0);
 	
+		// Calculates ingredient with highest calorie count
+		for (Ingredient ingredient : recipe.getIngredients()) {
+		    if (ingredient.getCalories() >= maxCalories) {
+				maxCalories = ingredient.getCalories();
+				maxIngredient = ingredient;
+		    }
+		}
 	
-	in.close();
-	return recipe;
+		// Asks user to guess the calories
+		Scanner in = new Scanner(System.in);
+		System.out.println(
+			"\n\n\n\n***********************************************************************************************************************");
+		System.out.println("Can you guess how many calories your recipe has per portion?.\nEnter the amount: ");
+		Double guessedCalories = in.nextDouble();
+		in.hasNextLine();
+	
+		// Compares the answer with the correct answer +/- 2.5% calories
+		double tolerance = caloriesPerPortion * 0.025;
+		if (Math.abs(caloriesPerPortion - guessedCalories) > tolerance) {
+		    System.out.println(
+			    "\n***********************************************************************************************************************");
+		    System.out.println("You're off by more than 2.5%. The correct amount is: " + caloriesPerPortion
+			    + ".\n\nThe ingredient with the highest number of calories is " + maxIngredient.getName() + " with "
+			    + maxCalories / numberOfPortions + " calories per portion.\nThat's "
+			    + (int)((maxCalories / numberOfPortions / caloriesPerPortion)*100)
+			    + "% of the total.\n\n\nWe're going to look for a potential subsitute.");
+		} else {
+		    System.out.println(
+			    "\n***********************************************************************************************************************"
+			    + "\nThat's great! You guessed the correct amount within a 2.5% tolerance. The correct amount is: "
+				    + caloriesPerPortion + ".\nThe ingredient with the highest number of calories is "
+				    + maxIngredient.getName() + " with " + maxCalories / numberOfPortions
+				    + " calories per portion.\nThat's " + maxCalories / numberOfPortions / caloriesPerPortion
+				    + "% of the total.\n\n\nWe're going to look for a potential subsitute.");
+		}
+		NutritionApiCaller callApi = new NutritionApiCaller();
+		ArrayList<Ingredient> subs = callApi.getSubstitutions(maxIngredient);
+		if (subs == null) {
+			System.out.println("Unfortunately we could not find a "
+					+ "lower calorie substitute for " + maxIngredient.getName());
+		} else {
+			double calsPerPortion = 0.0;
+			int subCals=0;
+			String subString = "";
+			int counter = 0;
+			for (Ingredient i : subs) {
+				counter++;
+				subCals = subCals + i.getCalories();
+				subString = subString + i.getAmount() + " " + 
+				i.getUnitOfMeasure() + " " + 
+						i.getName();
+				if (counter != subs.size()) {
+					subString = subString + " and ";
+				}
+			}
+			calsPerPortion = (double) subCals / (double) recipe.getPortions();
+			int calsPerPortionSaved = (int) ((maxIngredient.getCalories() / recipe.getPortions()) - calsPerPortion);
+			System.out.println("Using " + subString + 
+					" instead of " + maxIngredient.getAmount() + " " + 
+					maxIngredient.getUnitOfMeasure() + " " +  maxIngredient.getName() + 
+					" would save you " + calsPerPortionSaved + " calories per portion.  Would you like to "
+					+ "make this substiution (y/n)");
+			String wantToReplace = "";
+			while(!wantToReplace.equals("y") && !wantToReplace.equals("n")) {
+				wantToReplace = in.nextLine().toLowerCase();
+				if (!wantToReplace.equals("y") && !wantToReplace.equals("n") && !wantToReplace.equals("")) {
+					System.out.println("We don't understand.  Please type y or n.");
+				}
+			}
+			if (wantToReplace.equals("y")) {
+				recipe.getIngredients().remove(maxIngredient);
+				for (Ingredient i : subs) {
+					recipe.addIngredient(i);
+				}
+				recipe.calcNutritionFactsPerPortion();
+			}
+		}
+		
+		in.close();
+		return recipe;
 
     }
 }
