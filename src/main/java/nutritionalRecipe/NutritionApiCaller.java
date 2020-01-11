@@ -481,14 +481,14 @@ public class NutritionApiCaller {
 
 	// THIS IS JSUT FOR TESTING PURPOSES.  DELETE EVENTUALLY
 	public static void main (String[] args) {
-		Ingredient test = new Ingredient("sour cream");
+		Ingredient test = new Ingredient("butter");
 		test.setUnitOfMeasure("Gram");
 		test.setAmount(300);
 		NutritionApiCaller nac = new NutritionApiCaller();
 //		String sub = "1/2 cup = 1 cup plain yogurt";
 //		nac.parseSubstitutionString(test, sub);
 		nac.makeNutritionalCall(test);
-//		nac.getSubstitutions(test);
+		nac.getSubstitutions(test);
 		System.out.println(test);
 	}
 }
