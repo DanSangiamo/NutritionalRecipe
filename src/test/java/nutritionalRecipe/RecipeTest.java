@@ -2,16 +2,13 @@ package nutritionalRecipe;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RecipeTest {
 
     @Test
     void calcNutritionFactsPerPortion() {
         Recipe myRecipe = new Recipe("myRecipe");
-        ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
         Ingredient ing1 = new Ingredient("chocolate", 60, "Grams");
         Ingredient ing2= new Ingredient("sugar", 1, "Cup");
         ing1.setCalories(100);
@@ -27,8 +24,8 @@ class RecipeTest {
         ing1.setProtein(2);
         ing2.setProtein(0);
         myRecipe.setPortions(4);
-        ingredients.add(ing1);
-        ingredients.add(ing2);
+        myRecipe.addIngredient(ing1);
+        myRecipe.addIngredient(ing2);
         myRecipe.calcNutritionFactsPerPortion();
         assertEquals(myRecipe.getNutritionFacts().get(0), 40);
     }
