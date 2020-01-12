@@ -29,6 +29,7 @@ class RecipeTest {
         myRecipe.setPortions(4);
         ingredients.add(ing1);
         ingredients.add(ing2);
+        myRecipe.calcNutritionFactsPerPortion();
         assertEquals(myRecipe.getNutritionFacts().get(0), 40);
     }
 
