@@ -25,8 +25,11 @@ public class UserInteraction {
 	Scanner in = new Scanner(System.in);
 
 	System.out.println(
-		"***********************************************************************************************************************");
-	System.out.println("Please enter the name of the recipe");
+		"***********************************************************************************************************************"
+		+ "\n                     KnowCal\n"
+		+"***********************************************************************************************************************\n"
+		+ "" );
+	System.out.println("Please enter the name of a recipe");
 	recipeName = in.nextLine();
 
 	// Create recipe object
@@ -190,7 +193,7 @@ public class UserInteraction {
 			    + ".\n\nThe ingredient with the highest number of calories is " + maxIngredient.getName() + " with "
 			    + maxCalories / numberOfPortions + " calories per portion.\nThat's "
 			    + (int)((maxCalories / numberOfPortions / caloriesPerPortion)*100)
-			    + "% of the total.\n\n\nWe're going to look for a potential subsitute.");
+			    + "% of the total.\n\n\nWe're going to look for a potential subsitute.\n");
 		} else {
 		    System.out.println(
 			    "\n***********************************************************************************************************************"
@@ -204,7 +207,7 @@ public class UserInteraction {
 		ArrayList<Ingredient> subs = callApi.getSubstitutions(maxIngredient);
 		if (subs == null) {
 			System.out.println("Unfortunately we could not find a "
-					+ "lower calorie substitute for " + maxIngredient.getName());
+					+ "lower calorie substitute for " + maxIngredient.getName() + ".\n");
 		} else {
 			double calsPerPortion = 0.0;
 			int subCals=0;
