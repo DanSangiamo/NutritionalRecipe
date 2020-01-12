@@ -14,9 +14,7 @@ public class UserInteraction {
     /**
      * This method asks the user for the ingredients in the recipe
      * 
-     * @return
-     * 
-     * @return a HashMap with the ingredients, amount and UOM
+     * @return an object with ingredients, amount and UOM
      */
     public Recipe createRecipe() {
 	NutritionApiCaller callApi = new NutritionApiCaller();
@@ -45,9 +43,16 @@ public class UserInteraction {
 	System.out.println("\nNow let's enter the ingredients and the quantities.");
 	System.out.println("Enter the ingredient name (type END when done): ");
 	currentIngredient = in.nextLine();
+
+	if (currentIngredient.toUpperCase().equals("END") && listOfIngredients.size()==0 ) {
+	    System.out.println("No ingredients have been entered. Execution terminated.");
+	    System. exit(0); 
+	}
+	
 	Ingredient ing = new Ingredient(currentIngredient);
 
 	// Start entering ingredients
+	    
 	while (!currentIngredient.toUpperCase().equals("END")) {
 
 	    // Asks for UOM
@@ -57,11 +62,11 @@ public class UserInteraction {
 	    String uom = in.nextLine();
 
 	    // Validates UOM
-	    while (!uom.equals("Whole") && !uom.equals("Gram") && !uom.equals("Kilogram") && !uom.equals("Liter")
-		    && !uom.equals("Milliliter") && !uom.equals("Ounce") && !uom.equals("Pound") && !uom.equals("Pinch")
-		    && !uom.equals("Fluid Ounce") && !uom.equals("Gallon") && !uom.equals("Pint")
-		    && !uom.equals("Quart") && !uom.equals("Drop") && !uom.equals("Cup") && !uom.equals("Tablespoon")
-		    && !uom.equals("Teaspoon")) {
+	    while (!uom.toLowerCase().equals("whole") && !uom.toLowerCase().equals("gram") && !uom.toLowerCase().equals("kilogram") && !uom.toLowerCase().equals("liter")
+		    && !uom.toLowerCase().equals("Milliliter") && !uom.toLowerCase().equals("Ounce") && !uom.toLowerCase().equals("Pound") && !uom.toLowerCase().equals("Pinch")
+		    && !uom.toLowerCase().equals("fluid ounce") && !uom.toLowerCase().equals("gallon") && !uom.toLowerCase().equals("pint")
+		    && !uom.toLowerCase().equals("quart") && !uom.toLowerCase().equals("drop") && !uom.toLowerCase().equals("cup") && !uom.toLowerCase().equals("tablespoon")
+		    && !uom.toLowerCase().equals("teaspoon")) {
 		System.out.println("Incorrect entry. Please try again");
 		System.out.println(
 			"\nSelect the unit of measure:  Whole, Gram, Kilogram, Liter, Milliliter, Ounce, Pound, Pinch, Fluid Ounce, Gallon, Pint, Quart, Drop, Cup, Tablespoon, Teaspoon");
@@ -134,10 +139,11 @@ public class UserInteraction {
 	    currentIngredient = in.nextLine();
 
 	    // Creates a new instance of Ingredient
-	    if (!currentIngredient.equals("END"))
+	    if (!currentIngredient.toUpperCase().equals("END")) {
 		ing = new Ingredient(currentIngredient);
 	}
 
+	}
 	// Prints list of ingredients and amounts
 	System.out.println(
 		"***********************************************************************************************************************");
@@ -151,9 +157,8 @@ public class UserInteraction {
 	}
 	System.out.println(
 		"***********************************************************************************************************************");
-
+	
 	return currentRecipe;
-
     }
 
     /**
@@ -193,7 +198,7 @@ public class UserInteraction {
 			    + ".\n\nThe ingredient with the highest number of calories is " + maxIngredient.getName() + " with "
 			    + maxCalories / numberOfPortions + " calories per portion.\nThat's "
 			    + (int)((maxCalories / numberOfPortions / caloriesPerPortion)*100)
-			    + "% of the total.\n\n\nWe're going to look for a potential subsitute.\n");
+			    + "% of the total.\n\n\nWe're going to look for a potential substitute.\n");
 		} else {
 		    System.out.println(
 			    "\n***********************************************************************************************************************"
