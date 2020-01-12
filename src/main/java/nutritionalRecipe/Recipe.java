@@ -57,6 +57,8 @@ public class Recipe {
      * calculate nutrition facts of one portion of the recipe
      */
     public void calcNutritionFactsPerPortion(){
+	this.nutritionFacts=new ArrayList <Double>();
+	
         double totalCalories=0;
         for(int i=0; i<ingredients.size(); i++) {
             totalCalories += (double) (ingredients.get(i).getCalories())/ (double) numPortions;
