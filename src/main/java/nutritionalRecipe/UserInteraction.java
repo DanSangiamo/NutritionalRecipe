@@ -48,7 +48,7 @@ public class UserInteraction {
 	Ingredient ing = new Ingredient(currentIngredient);
 
 	// Start entering ingredients
-	while (!currentIngredient.equals("END")) {
+	while (!currentIngredient.toUpperCase().equals("END")) {
 
 	    // Asks for UOM
 	    System.out.println(
@@ -229,7 +229,7 @@ public class UserInteraction {
 					" instead of " + maxIngredient.getAmount() + " " + 
 					maxIngredient.getUnitOfMeasure() + " " +  maxIngredient.getName() + 
 					" would save you " + calsPerPortionSaved + " calories per portion.  Would you like to "
-					+ "make this substiution (y/n)");
+					+ "make this substitution (y/n)");
 			String wantToReplace = "";
 			while(!wantToReplace.equals("y") && !wantToReplace.equals("n")) {
 				wantToReplace = in.nextLine().toLowerCase();
